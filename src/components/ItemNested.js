@@ -1,0 +1,96 @@
+import React, { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+
+import ListNested from './ListNested'
+
+import './List.scss'
+
+const ItemNested = ({ 
+  item, 
+  children,
+  isChecked
+}) => {
+  const [collapsed, setCollapsed] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  useEffect(() => {
+    const collapsedIDs = JSON.parse(localStorage.getItem('expanded')) || []
+
+    collapsedIDs.forEach(element => {
+      if (element === item.id) {
+        setCollapsed(true)
+      }
+    });
+
+  }, [item])
+
+  useEffect(() => {
+    setChecked(isChecked)
+  }, [isChecked]) 
+
+  useEffect(() => {
+    const checkedIDs = JSON.parse(localStorage.getItem('check')) || []
+      checkedIDs.forEach(element => {
+        if (element === item.id) {
+          setChecked(true)
+        }
+      });
+
+  }, [item])
+
+  useEffect(() => {
+    let expandeds = JSON.parse(localStorage.getItem('expanded')) || []
+    if (collapsed) {
+      localStorage.setItem('expanded', JSON.stringify([...expandeds, item.id]))
+    } else {
+      const items = expandeds.filter(id => id !== item.id)
+      localStorage.setItem('expanded', JSON.stringify(items))
+    }
+  }, [collapsed, item])
+
+  const toggleCollapse = () => setCollapsed((val) => !val)
+
+  const toggleChecked = () => {
+    const val = !checked
+    const childIDS = children.map((c) => c.id)
+    let checks = JSON.parse(localStorage.getItem('check')) || []
+
+    if (val) {
+      localStorage.setItem('check', JSON.stringify([...checks, item.id, ...childIDS]))
+    } else {
+      const items = [checks, childIDS].filter(id => id !== item.id)
+      localStorage.setItem('check', JSON.stringify(items))
+    }
+
+    setChecked(val)
+  }
+
+  return (
+    <div 
+      className={`items-nested ${collapsed && 'expanded'}`} 
+    >
+      <div className="title">
+        <div onClick={toggleChecked}>
+          <input className="checkbox" type="checkbox" checked={checked} />
+          <span>{item.name}</span>
+        </div>
+
+        {children.length > 0 && (
+          <FontAwesomeIcon 
+            onClick={toggleCollapse} 
+            className={`icon ${collapsed && 'collapsed'}`} icon={faChevronDown} 
+          />
+        )}
+      </div>
+
+      <div className={`subitem ${collapsed ? 'collapsed-item' : ''}`}>
+        {collapsed && children?.length > 0 && (
+          <ListNested data={children} checked={checked} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default ItemNested
