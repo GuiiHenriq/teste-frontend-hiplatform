@@ -1,10 +1,11 @@
 .container--box {
   min-width: 320px;
-  width: 540px;
+  max-width: 540px;
+  width: 100%;
 
   .items-nested {
 
-    &.expanded {
+    &.active {
       background-color: rgb(252, 252, 255);
     }
 
@@ -30,13 +31,19 @@
       }
 
       .icon {
-        margin-right: 20px;
-        color: black;
-        transition: transform .4s;
-        cursor: pointer;
+        width: 70px;
+        display: flex;
+        justify-content: flex-end;
 
-        &.collapsed {
-          transform: rotate(180deg);
+        svg {
+          margin-right: 20px;
+          color: #000;
+          transition: transform .4s;
+          cursor: pointer;
+
+          &.collapsed {
+            transform: rotate(180deg);
+          }
         }
       }
 

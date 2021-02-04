@@ -15,7 +15,7 @@ const ItemNested = ({
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    const collapsedIDs = JSON.parse(localStorage.getItem('expanded')) || []
+    const collapsedIDs = JSON.parse(localStorage.getItem('active')) || []
 
     collapsedIDs.forEach(element => {
       if (element === item.id) {
@@ -40,12 +40,12 @@ const ItemNested = ({
   }, [item])
 
   useEffect(() => {
-    let expandeds = JSON.parse(localStorage.getItem('expanded')) || []
+    let expandeds = JSON.parse(localStorage.getItem('active')) || []
     if (collapsed) {
-      localStorage.setItem('expanded', JSON.stringify([...expandeds, item.id]))
+      localStorage.setItem('active', JSON.stringify([...expandeds, item.id]))
     } else {
       const items = expandeds.filter(id => id !== item.id)
-      localStorage.setItem('expanded', JSON.stringify(items))
+      localStorage.setItem('active', JSON.stringify(items))
     }
   }, [collapsed, item])
 
@@ -68,7 +68,7 @@ const ItemNested = ({
 
   return (
     <div 
-      className={`items-nested ${collapsed && 'expanded'}`} 
+      className={`items-nested ${collapsed && 'active'}`} 
     >
       <div className="title">
         <div onClick={toggleChecked}>
@@ -77,11 +77,13 @@ const ItemNested = ({
         </div>
 
         {children.length > 0 && (
-          <FontAwesomeIcon 
-            onClick={toggleCollapse} 
-            className={`icon ${collapsed && 'collapsed'}`} icon={faChevronDown} 
+        <span class="icon" onClick={toggleCollapse}>
+          <FontAwesomeIcon  
+            className={`${collapsed && 'collapsed'}`} icon={faChevronDown} 
           />
+        </span>
         )}
+        
       </div>
 
       <div className={`subitem ${collapsed ? 'collapsed-item' : ''}`}>

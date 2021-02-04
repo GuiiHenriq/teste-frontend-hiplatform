@@ -5,7 +5,7 @@ import api from './services'
 
 
 const App = () => {
-  const [data, setData] = useState([])
+  const [props, setData] = useState([])
 
   useEffect(() => {
     api.get('/GuiiHenriq/04d6372eff5056e74dd5e88e713a3a1d/raw/9fcfdb4c4fac19f8dc13bfb8091ccbd06f1203af/dataitems.json')
@@ -18,7 +18,7 @@ const App = () => {
   return (
     <div className="app">
       <h1>Árvore de Itens</h1>
-      <ListNested data={data} />
+      <ListNested data={props} />
     </div>
   )
 }
